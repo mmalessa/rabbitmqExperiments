@@ -5,6 +5,7 @@
         "php": "^7.0.8",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "php-amqplib/rabbitmq-bundle": "^1.14",
         "symfony/console": "^3.4",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^3.4",
