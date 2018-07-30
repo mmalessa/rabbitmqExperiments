@@ -1,4 +1,6 @@
 /.idea
+/config/ssl/*
+!/config/ssl/*.sh
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/

@@ -13,17 +13,38 @@ old_sound_rabbit_mq:
             read_write_timeout: 3
             keepalive: false
             heartbeat: 0
-            #use_socket: true # default false
+
+        ssl_connection:
+            host:     '%env(RABBITMQ_HOST)%'
+            port:     5671
+            user:     '%env(RABBITMQ_USER)%'
+            password: '%env(RABBITMQ_PASSWORD)%'
+            vhost:    '%env(RABBITMQ_VHOST)%'
+
+            lazy:     false
+            connection_timeout: 3
+            read_write_timeout: 3
+            keepalive: false
+            heartbeat: 0
+
+            ssl_context:
+                cacert:   '/var/www/html/rabbitmqExperiments/config/ssl/testca/cacert.pem'
+                local_cert:   '/var/www/html/rabbitmqExperiments/config/ssl/client/cert.pem'
+                local_pk:     '/var/www/html/rabbitmqExperiments/config/ssl/client/key.pem'
+                verify_peer: false
+                verify_peer_name: false
+                allow_self_signed: true
+                ciphers: 'TLSv1.2'
 
     producers:
         # use 'old_sound_rabbit_mq.my_task_producer' service to send data.
         my_task:
-            connection:       default
+            connection:       ssl_connection
             exchange_options: { name: 'test', type: direct }
 
     consumers:
         my_task:
-            connection:       default
+            connection:       ssl_connection
             exchange_options: { name: 'test', type: direct }
             queue_options:    { name: 'test'}
             callback:         App\Consumer\TestConsumer
