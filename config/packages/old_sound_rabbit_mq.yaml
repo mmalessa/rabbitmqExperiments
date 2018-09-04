@@ -39,12 +39,12 @@ old_sound_rabbit_mq:
     producers:
         # use 'old_sound_rabbit_mq.my_task_producer' service to send data.
         my_task:
-            connection:       ssl_connection
-            exchange_options: { name: 'test', type: direct }
+            connection:       default
+            exchange_options: { name: 'myExchange', type: direct }
 
     consumers:
         my_task:
-            connection:       ssl_connection
-            exchange_options: { name: 'test', type: direct }
-            queue_options:    { name: 'test'}
+            connection:       default
+            exchange_options: { name: 'myExchange', type: direct }
+            queue_options:    { name: 'myQueue'}
             callback:         App\Consumer\TestConsumer

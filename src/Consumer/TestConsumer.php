@@ -7,6 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 class TestConsumer implements ConsumerInterface
 {
 
+    // ./bin/console rabbitmq:consumer my_task
     public function execute(AMQPMessage $msg)
     {
         echo date('Y-m-d H:i:s');
