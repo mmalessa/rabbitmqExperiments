@@ -25,4 +25,5 @@ rabbitmqctl delete_user guest
 
 The Web UI is located at: http://server-name:15672/ (guest/guest)
 
+https://www.rabbitmq.com/rabbitmqctl.8.html
 
