@@ -101,6 +101,9 @@
             "ref": "ba769b98463f9d5f3d907db32bb64337d1e62ecb"
         }
     },
+    "symfony/var-dumper": {
+        "version": "v3.4.16"
+    },
     "symfony/yaml": {
         "version": "v3.4.13"
     }

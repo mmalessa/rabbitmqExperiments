@@ -3,7 +3,7 @@ old_sound_rabbit_mq:
         default:
             #url: '%env(RABBITMQ_URL)%'
             host:     '%env(RABBITMQ_HOST)%'
-            port:     %env(RABBITMQ_PORT)%
+            port:     5672
             user:     '%env(RABBITMQ_USER)%'
             password: '%env(RABBITMQ_PASSWORD)%'
             vhost:    '%env(RABBITMQ_VHOST)%'
@@ -28,9 +28,9 @@ old_sound_rabbit_mq:
             heartbeat: 0
 
             ssl_context:
-                cacert:   '/var/www/html/rabbitmqExperiments/config/ssl/testca/cacert.pem'
-                local_cert:   '/var/www/html/rabbitmqExperiments/config/ssl/client/cert.pem'
-                local_pk:     '/var/www/html/rabbitmqExperiments/config/ssl/client/key.pem'
+                cacert:   '/home/projects/rabbitmqExperiments/config/ssl/ca/cacert.pem'
+                local_cert:   '/home/projects/rabbitmqExperiments/config/ssl/client/cert.pem'
+                local_pk:     '/home/projects/rabbitmqExperiments/config/ssl/client/key.pem'
                 verify_peer: false
                 verify_peer_name: false
                 allow_self_signed: true
@@ -40,11 +40,27 @@ old_sound_rabbit_mq:
         # use 'old_sound_rabbit_mq.my_task_producer' service to send data.
         my_task:
             connection:       default
-            exchange_options: { name: 'myExchange', type: direct }
+            exchange_options: { name: 'main_events', type: topic }
 
     consumers:
-        my_task:
+        single_task:
             connection:       default
-            exchange_options: { name: 'myExchange', type: direct }
-            queue_options:    { name: 'myQueue'}
-            callback:         App\Consumer\TestConsumer
+            exchange_options: { name: 'main_events', type: topic}
+            queue_options:
+                name: 'task_job_done'
+                durable: true
+                auto_delete: false
+                routing_keys:
+                    - 'test.task_job_done'
+            callback:         App\Consumer\SingleTaskConsumer
+
+        all_logs:
+            connection:       default
+            exchange_options: { name: 'main_events', type: topic}
+            queue_options:
+              name: 'all_logs'
+              durable: true
+              auto_delete: false
+              routing_keys:
+              - '#'
+            callback:         App\Consumer\AllLogsConsumer

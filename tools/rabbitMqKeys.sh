@@ -9,9 +9,9 @@ DEFAULT_BITS=4096
 
 CA_DIR="cadir"
 CA_DEFAULT_DAYS=3650
-CA_CN="TestCA"
+CA_CN="PmCA"
 
-SERVER_CN="MyServer"
+SERVER_CN="PmServer"
 
 # end config
 
@@ -135,7 +135,7 @@ case "$1" in
         create_server_key
         ;;
     create-client)
-	create_client_key $2
+	    create_client_key $2
 esac
 
 exit 0;       

@@ -6,4 +6,5 @@
 /public/bundles/
 /var/
 /vendor/
+/tools/mycerts/*
 ###< symfony/framework-bundle ###
