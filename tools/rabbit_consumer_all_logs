@@ -12,15 +12,16 @@
 #ref http://unix.stackexchange.com/questions/85033/use-start-stop-daemon-for-a-php-server/85570#85570
 #ref http://serverfault.com/questions/229759/launching-a-php-daemon-from-an-lsb-init-script-w-start-stop-daemon
 
-NAME=myservice
+NAME=all_logs
 DESC="Daemon for my magnificent PHP CLI script"
-PIDFILE="/var/run/${NAME}.pid"
-#LOGFILE="/var/log/${NAME}.log"
-LOGFILE="/home/projects/rabbitmqExperiments/log/${NAME}.log"
+BASEDIR="/home/projects/rabbitmqExperiments"
 
 DAEMON="/usr/bin/php"
-DAEMON_OPTS="/home/projects/rabbitmqExperiments/bin/console rabbitmq:consumer all_logs"
+SFCOMMAND="rabbitmq:consumer ${NAME}"
 
+PIDFILE="${BASEDIR}/var/run/${NAME}.pid"
+LOGFILE="${BASEDIR}/log/${NAME}.log"
+DAEMON_OPTS="${BASEDIR}/bin/console ${SFCOMMAND}"
 START_OPTS="--start --background --make-pidfile --pidfile ${PIDFILE} --exec ${DAEMON} ${DAEMON_OPTS}"
 STOP_OPTS="--stop --pidfile ${PIDFILE}"
 
@@ -48,8 +49,7 @@ case "$1" in
         echo "$NAME."
         ;;
     *)
-        N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        echo "Usage: $NAME {start|stop|restart|force-reload}" >&2
         exit 1
         ;;
 esac
