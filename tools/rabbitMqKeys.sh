@@ -115,6 +115,10 @@ create_client_key(){
     CLIENT_NAME=$1
     CLIENT_DIR="client-"$CLIENT_NAME
     echo "Create Client "$CLIENT_NAME
+    if ! test -d $BASE_DIR/$CA_DIR; then
+        echo "ERROR: /$CA_DIR doesn't exists"
+	return
+    fi
     if test -d $BASE_DIR/$CLIENT_DIR; then
         echo "ERROR: /$CLIENT_DIR exists"
 	return
