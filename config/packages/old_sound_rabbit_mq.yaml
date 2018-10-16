@@ -8,8 +8,8 @@ old_sound_rabbit_mq:
             vhost:    '%env(RABBITMQ_VHOST)%'
 
             lazy:     true
-            connection_timeout: 3
-            read_write_timeout: 3
+            connection_timeout: 3600
+            read_write_timeout: 3600
             keepalive: false
             heartbeat: 60
 
@@ -21,8 +21,8 @@ old_sound_rabbit_mq:
             vhost:    '%env(RABBITMQ_VHOST)%'
 
             lazy:     true
-            connection_timeout: 3
-            read_write_timeout: 3
+            connection_timeout: 3600
+            read_write_timeout: 3600
             keepalive: false
             heartbeat: 60
 
