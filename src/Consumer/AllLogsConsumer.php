@@ -22,23 +22,33 @@ class AllLogsConsumer implements ConsumerInterface
         echo "    ";
         echo "ROUTING KEY: " . $msg->delivery_info['routing_key'] . PHP_EOL;
         dump($msg->body);
+        echo "DeliveryTag: " . $msg->delivery_info['delivery_tag'] . PHP_EOL;
+
         $testparameter = $this->container->getParameter('testparameter');
         echo "TestParameter: $testparameter" . PHP_EOL;
-//        dump($msg->delivery_info);
+        echo "Redelivered: " . ($msg->delivery_info['redelivered'] ? 'Y' : 'N') . PHP_EOL;
 
-        echo "\n";
+
+        try {
+            dump($msg->get('application_headers')->getNativeData()['x-death']);
+        } catch (\Exception $e) {
+            echo "No 'application_headers' -> OK" . PHP_EOL;
+        }
+
+        echo PHP_EOL;
         sleep(2);
 
+        //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], false, false);
 
 
-        return true;
-        return false;
+//        return true;
+//        return false;
 
-        return ConsumerInterface::MSG_SINGLE_NACK_REQUEUE;  // (??)
-        return ConsumerInterface::MSG_ACK;                  // Remove message from queue only if callback return not false
-        return ConsumerInterface::MSG_REJECT_REQUEUE;       // Reject and requeue message to RabbitMQ
-        return ConsumerInterface::MSG_REJECT;               // Reject and drop
-        return ConsumerInterface::MSG_ACK_SENT;             // ack not sent by the consumer but should be sent by the implementer of ConsumerInterface (??)
+//        return ConsumerInterface::MSG_SINGLE_NACK_REQUEUE;  // (??)
+//        return ConsumerInterface::MSG_ACK;                  // Remove message from queue only if callback return not false
+//        return ConsumerInterface::MSG_REJECT_REQUEUE;       // Reject and requeue message to RabbitMQ
+        return ConsumerInterface::MSG_REJECT;               // Reject and drop (if x-dead-letter-exchange is configured -> re-send to it)
+//        return ConsumerInterface::MSG_ACK_SENT;             // ack not sent by the consumer but should be sent by the implementer of ConsumerInterface (??)
 
     }
 }
