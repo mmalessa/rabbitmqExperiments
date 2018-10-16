@@ -1,7 +1,7 @@
 <?php
 namespace App\Command;
 
-use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
+//use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

@@ -38,12 +38,12 @@ old_sound_rabbit_mq:
     producers:
         # use 'old_sound_rabbit_mq.my_task_producer' service to send data.
         my_task:
-            connection:       ssl_connection
+            connection:       default
             exchange_options: { name: 'main_events', type: topic }
 
     consumers:
         single_task:
-            connection:       ssl_connection
+            connection:       default
             exchange_options: { name: 'main_events', type: topic}
             queue_options:
                 name: 'task_job_done'
@@ -54,7 +54,7 @@ old_sound_rabbit_mq:
             callback:         App\Consumer\SingleTaskConsumer
 
         all_logs:
-            connection:       ssl_connection
+            connection:       default
             exchange_options: { name: 'main_events', type: topic}
             queue_options:
               name: 'all_logs'
