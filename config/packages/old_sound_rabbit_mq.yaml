@@ -57,9 +57,31 @@ old_sound_rabbit_mq:
             connection:       default
             exchange_options: { name: 'main_events', type: topic}
             queue_options:
-              name: 'all_logs'
-              durable: true
-              auto_delete: false
-              routing_keys:
-              - '#'
+                name: 'all_logs'
+                durable: true
+                auto_delete: false
+                arguments:
+                    x-dead-letter-exchange: ['S', 'main_events_dead']
+                    x-dead-letter-routing-key: ['S', 'test.task_job_done']
+                routing_keys:
+                - '#'
             callback:         App\Consumer\AllLogsConsumer
+
+        all_logs_dead:
+            connection:       default
+            exchange_options: { name: 'main_events_dead', type: topic}
+            queue_options:
+                name: 'all_logs_dead'
+                durable: true
+                auto_delete: false
+#                arguments:
+#                    x-dead-letter-exchange: ['S', 'main_events']
+#                    x-dead-letter-routing-key: ['S', 'test.task_job_done']
+                routing_keys:
+                - '#'
+            callback:         App\Consumer\AllLogsConsumer
+
+# arguments to test:
+# x-dead-letter-exchange ['S', 'all_logs']
+# x-dead-letter-routing-key
+# x-message-ttl: ['I', 3600000]
