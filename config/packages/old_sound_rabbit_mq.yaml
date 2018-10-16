@@ -7,11 +7,11 @@ old_sound_rabbit_mq:
             password: '%env(RABBITMQ_PASSWORD)%'
             vhost:    '%env(RABBITMQ_VHOST)%'
 
-            lazy:     false
+            lazy:     true
             connection_timeout: 3
             read_write_timeout: 3
             keepalive: false
-            heartbeat: 0
+            heartbeat: 60
 
         ssl_connection:
             host:     '%env(RABBITMQ_HOST)%'
@@ -20,11 +20,11 @@ old_sound_rabbit_mq:
             password: '%env(RABBITMQ_PASSWORD)%'
             vhost:    '%env(RABBITMQ_VHOST)%'
 
-            lazy:     false
+            lazy:     true
             connection_timeout: 3
             read_write_timeout: 3
             keepalive: false
-            heartbeat: 0
+            heartbeat: 60
 
             ssl_context:
                 cacert:   '/home/projects/rabbitmqExperiments/config/ssl/ca/cacert.pem'
