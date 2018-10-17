@@ -2,7 +2,7 @@ old_sound_rabbit_mq:
     connections:
         default:
             host:     '%env(RABBITMQ_HOST)%'
-            port:     5672
+            port:     '%env(RABBITMQ_PORT)%'
             user:     '%env(RABBITMQ_USER)%'
             password: '%env(RABBITMQ_PASSWORD)%'
             vhost:    '%env(RABBITMQ_VHOST)%'
@@ -15,7 +15,7 @@ old_sound_rabbit_mq:
 
         ssl_connection:
             host:     '%env(RABBITMQ_HOST)%'
-            port:     5671
+            port:     '%env(RABBITMQ_PORT_SSL)%'
             user:     '%env(RABBITMQ_USER)%'
             password: '%env(RABBITMQ_PASSWORD)%'
             vhost:    '%env(RABBITMQ_VHOST)%'
@@ -74,14 +74,43 @@ old_sound_rabbit_mq:
                 name: 'all_logs_dead'
                 durable: true
                 auto_delete: false
-#                arguments:
-#                    x-dead-letter-exchange: ['S', 'main_events']
-#                    x-dead-letter-routing-key: ['S', 'test.task_job_done']
                 routing_keys:
                     - '#'
             callback:         App\Consumer\AllLogsConsumer
 
-# arguments to test:
-# x-dead-letter-exchange ['S', 'all_logs']
-# x-dead-letter-routing-key
-# x-message-ttl: ['I', 3600000]
+# QUEUE ARGUMENTS
+#
+# x-message-ttl[I]
+#   determines for how long a message published to a queue can live
+#   before it is discarded by the server (in milliseconds)
+#
+# x-expires [I]
+#   where the queue itself will expire after a certain period of time
+#   if no messages have been accessed (in milliseconds)
+#
+# x-max-length [I]
+#   for defining how many messges the queue is allowed to hold;
+#   messages from the front of the queue will be dead-lettered to make way
+#   for new messages when the maximum length is reached
+#
+# x-max-length-bytes [I]
+#   for defining in bytes how large the queue can become;
+#   just like the maximum length above, messages from the front of the queue will be dead-lettered first
+#
+# x-dead-letter-exchange [S]
+#   indicates the exchange for routing dead messages out of the queue because they have reached
+#   the end of their time-to-live, they exceed the max length (messages or bytes) configured for the queue,
+#   or they have been rejected by the queue or nacked (negative acknowledgement) by the consumer
+#   due to some issue and are not slated for re-queueing
+#
+# x-dead-letter-routing-key [S]
+#   provides a new routing key context to the dead letter exchange;
+#   if no dead letter routing key is set, then the original routing key will be used
+#
+# x-max-priority [I]
+#   allows the queue to prioritize priority messages up to some maximum level you set;
+#   messages higher than the maximum for the queue will be re-prioritized down to this maximum level
+#
+# x-queue-mode [S] ['default'|'lazy']
+#   Lazy Queues - queues that move their contents to disk as early as practically possible,
+#   and only load them in RAM when requested by consumers, therefore the lazy denomination.
