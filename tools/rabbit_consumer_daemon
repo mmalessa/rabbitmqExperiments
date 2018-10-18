@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Installation
-# - Move this to /etc/init.d/myservice
+# - Move this to /etc/init.d/myservice (optionally)
 # - chmod +x this
 #
 # Starting and stopping
