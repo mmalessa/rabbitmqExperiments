@@ -9,4 +9,5 @@
 /tools/mycerts/*
 /log/*
 !*.gitkeep
+rabbit-cli-consumer.conf
 ###< symfony/framework-bundle ###

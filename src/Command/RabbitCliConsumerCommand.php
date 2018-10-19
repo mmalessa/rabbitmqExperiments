@@ -7,6 +7,7 @@
 namespace App\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,11 +27,14 @@ class RabbitCliConsumerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+//        $message = $input->getArgument('event');
 //        $message = base64_decode($input->getArgument('event'));
-        $message = json_decode(base64_decode($input)->getArgument('event'));
-        //$this->getContainer()->get('mailer')->send($message);
-        dump($message);
+        $message = json_decode(base64_decode($input->getArgument('event')));
 
+        //$this->getContainer()->get('mailer')->send($message);
+        dump($message->body);
+//        file_put_contents('/home/projects/rabbitmqExperiments/rabbit.log', print_r($message, true));
+        sleep(60);
         exit(0);
     }
     /*
