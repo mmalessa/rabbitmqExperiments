@@ -2,6 +2,7 @@
 
 /*
  * https://github.com/corvus-ch/rabbitmq-cli-consumer
+ * https://github.com/andreagrandi/go-amqp-example
  */
 
 namespace App\Command;
