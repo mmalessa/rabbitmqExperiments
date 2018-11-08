@@ -126,3 +126,9 @@ old_sound_rabbit_mq:
 # x-queue-mode [S] ['default'|'lazy']
 #   Lazy Queues - queues that move their contents to disk as early as practically possible,
 #   and only load them in RAM when requested by consumers, therefore the lazy denomination.
+
+# QOS OPTIONS
+#
+# prefetch size - prefetch window size in octets, null/0 (?) meaning "no specific limit"
+# prefetch count - prefetch window in terms of whole messages
+# global - global=null to mean that the QoS settings should apply per-consumer, global=true to mean that the QoS settings should apply per-channel
