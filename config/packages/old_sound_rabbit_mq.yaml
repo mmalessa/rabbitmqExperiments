@@ -65,7 +65,8 @@ old_sound_rabbit_mq:
 
         all_logs:
             connection:       default
-            exchange_options: { name: 'main_events', type: topic}
+            exchange_options: { name: 'main_events', type: topic }
+            qos_options:     { prefetch_size: 0, prefetch_count: 1, global: false }
             queue_options:
                 name: 'all_logs'
                 durable: true
@@ -73,6 +74,7 @@ old_sound_rabbit_mq:
                 arguments:
                     x-dead-letter-exchange: ['S', 'main_events_dead']
                     x-dead-letter-routing-key: ['S', 'test.task_job_done']
+                    x-max-priority: ['I', 3]
                 routing_keys:
                     - '#'
             callback:         App\Consumer\AllLogsConsumer
