@@ -1,6 +1,7 @@
-old_sound_rabbit_mq:
+# https://github.com/php-amqplib/RabbitMqBundle/blob/master/README.md
+# ./bin/console config:dump-reference old_sound_rabbit_mq
 
-    # https://github.com/php-amqplib/RabbitMqBundle/blob/master/README.md
+old_sound_rabbit_mq:
 
     connections:
         default:
@@ -47,6 +48,11 @@ old_sound_rabbit_mq:
                 verify_peer_name: false
                 allow_self_signed: true
                 ciphers: 'TLSv1.2'
+
+#    bindings:
+#        - {connection: default, exchange: foo, destination: bar, routing_key: 'baz.*', arguments: null, nowait: false}
+#        - {connection: default, exchange: foo1, destination: foo, routing_key: 'baz.*', destination_is_exchange: true, arguments: null, nowait: false}
+
 
     producers:
         # use 'old_sound_rabbit_mq.my_task_producer' service to send data.
