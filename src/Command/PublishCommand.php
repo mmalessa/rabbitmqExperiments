@@ -25,22 +25,21 @@ class PublishCommand extends ContainerAwareCommand
 
         for ($i=0; $i<30; $i++) {
 
-            $priority = ($i < 15 ? 0 : 3);
-
             if ($i < 10) $priority = 0;
             elseif ($i < 20) $priority = 1;
             else $priority = 2;
             
             $msg = [
-//                'my_test_id' => rand(1, 100000),
                 'id' => $i,
                 'send_time' => date('Y-m-d H:i:s'),
                 'priority' => $priority,
+                'random_number' => rand(0, 100000),
             ];
             $routingKey = $input->getOption('routing-key');
             $properties = [
                 'priority' => $priority
             ];
+
             $this->getContainer()->get('old_sound_rabbit_mq.my_task_producer')->publish(serialize($msg), $routingKey, $properties);
         }
     }
