@@ -23,10 +23,10 @@ class PublishCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        for ($i=0; $i<30; $i++) {
+        for ($i=0; $i<10; $i++) {
 
-            if ($i < 10) $priority = 0;
-            elseif ($i < 20) $priority = 1;
+            if ($i < 3) $priority = 0;
+            elseif ($i < 6) $priority = 1;
             else $priority = 2;
             
             $msg = [
