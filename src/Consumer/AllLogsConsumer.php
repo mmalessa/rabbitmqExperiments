@@ -2,6 +2,7 @@
 namespace App\Consumer;
 
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Container\ContainerInterface;
 
@@ -27,6 +28,9 @@ class AllLogsConsumer implements ConsumerInterface
         //printf("%04s\t%020s\t%01s\n", $body['id'], $body['send_time'], $body['priority']);
         dump($body);
 
+        /** @var AMQPChannel $channel */
+//        $channel = $msg->delivery_info['channel'];
+
 //        print_r($body);
 //        print json_encode($msg->body) . PHP_EOL;
 
@@ -46,7 +50,7 @@ class AllLogsConsumer implements ConsumerInterface
 //        echo PHP_EOL;
         sleep(1);
 
-        //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], false, false);
+//        $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], false, false);
 
 
 //        return true;
@@ -55,7 +59,7 @@ class AllLogsConsumer implements ConsumerInterface
 //        return ConsumerInterface::MSG_SINGLE_NACK_REQUEUE;  // (??)
 //        return ConsumerInterface::MSG_ACK;                  // Remove message from queue only if callback return not false
 //        return ConsumerInterface::MSG_REJECT_REQUEUE;       // Reject and requeue message to RabbitMQ
-        return ConsumerInterface::MSG_REJECT;               // Reject and drop (if x-dead-letter-exchange is configured -> re-send to it)
+//        return ConsumerInterface::MSG_REJECT;               // Reject and drop (if x-dead-letter-exchange is configured -> re-send to it)
 //        return ConsumerInterface::MSG_ACK_SENT;             // ack not sent by the consumer but should be sent by the implementer of ConsumerInterface (??)
 
     }
