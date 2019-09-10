@@ -4,6 +4,7 @@ namespace App\Consumer;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 use Psr\Container\ContainerInterface;
 
 class AllLogsConsumer implements ConsumerInterface
@@ -19,47 +20,65 @@ class AllLogsConsumer implements ConsumerInterface
     // ./bin/console rabbitmq:consumer all_logs
     public function execute(AMQPMessage $msg)
     {
-//        echo date('Y-m-d H:i:s');
-//        echo "    ";
-//        echo "ROUTING KEY: " . $msg->delivery_info['routing_key'] . PHP_EOL;
-//        dump($msg->body);
+        echo "all_logs\n";
 
-        $body = unserialize($msg->body);
-        //printf("%04s\t%020s\t%01s\n", $body['id'], $body['send_time'], $body['priority']);
+        // BODY
+        sprintf("Body size: %s\n", $msg->body_size);
+        sprintf("Is truncated: %s\n", $msg->is_truncated);
+        sprintf("Content encoding: %s\n", $msg->content_encoding);
+        $body = json_decode($msg->body);
+        echo "BODY:\n";
         dump($body);
+        echo PHP_EOL;
 
-        /** @var AMQPChannel $channel */
-//        $channel = $msg->delivery_info['channel'];
+        // PROPERTIES
+        echo "PROPERTIES:\n";
+        dump($msg->get_properties());
+        printf("Content type: %s\n", $msg->get('content_type'));
+        printf("Delivery mode: %s\n", $msg->get('delivery_mode'));
+        printf("Priority: %s\n", $msg->get('priority'));
+        echo PHP_EOL;
 
-//        print_r($body);
-//        print json_encode($msg->body) . PHP_EOL;
+        // DELIVERY INFO
+        echo "DELIVERY INFO:\n";
+        dump(array_keys($msg->delivery_info));
+        printf("Consumer tag: %s\n", $msg->get('consumer_tag'));
+        printf("Delivery tag: %s\n", $msg->get('delivery_tag'));
+        printf("Redelivered: %s\n", $msg->get('redelivered'));
+        printf("Exchange name: %s\n", $msg->get('exchange'));
+        printf("Routing key: %s\n", $msg->get('routing_key'));
+        echo PHP_EOL;
 
-//        echo "DeliveryTag: " . $msg->delivery_info['delivery_tag'] . PHP_EOL;
-//
-//        $testparameter = $this->container->getParameter('testparameter');
-//        echo "TestParameter: $testparameter" . PHP_EOL;
-//        echo "Redelivered: " . ($msg->delivery_info['redelivered'] ? 'Y' : 'N') . PHP_EOL;
+        /** @var AMQPChannel $channelInfo */
+        $channelInfo = $msg->get('channel');
 
+        try {
+            /** @var AMQPTable $applicationHeaders */
+//            echo "APPLICATION HEADERS\n";
+            $applicationHeaders = $msg->get('application_headers');
+//            dump($applicationHeaders);
+//            echo PHP_EOL;
 
-//        try {
-//            dump($msg->get('application_headers')->getNativeData()['x-death']);
-//        } catch (\Exception $e) {
-//            echo "No 'application_headers' -> OK" . PHP_EOL;
-//        }
+            echo "APPLICATION HEADERS NATIVE DATA\n";
+            $applicationHeadersNativeData = $applicationHeaders->getNativeData();
+            dump($applicationHeadersNativeData);
+            echo PHP_EOL;
 
-//        echo PHP_EOL;
+        } catch (\Exception $e) {
+            echo $e->getMessage() . PHP_EOL;
+        }
+
         sleep(1);
 
-//        $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], false, false);
 
 
-//        return true;
-//        return false;
+//        return true; // == MSG_ACK
+//        return false; // == MSG_REJECT
 
 //        return ConsumerInterface::MSG_SINGLE_NACK_REQUEUE;  // (??)
 //        return ConsumerInterface::MSG_ACK;                  // Remove message from queue only if callback return not false
 //        return ConsumerInterface::MSG_REJECT_REQUEUE;       // Reject and requeue message to RabbitMQ
-//        return ConsumerInterface::MSG_REJECT;               // Reject and drop (if x-dead-letter-exchange is configured -> re-send to it)
+        return ConsumerInterface::MSG_REJECT;               // Reject and drop (if x-dead-letter-exchange is configured -> re-send to it)
 //        return ConsumerInterface::MSG_ACK_SENT;             // ack not sent by the consumer but should be sent by the implementer of ConsumerInterface (??)
 
     }

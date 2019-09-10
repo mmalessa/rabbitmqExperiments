@@ -41,7 +41,7 @@ class PublishCommand extends ContainerAwareCommand
                 'priority' => $priority
             ];
 
-            $this->getContainer()->get('old_sound_rabbit_mq.my_task_producer')->publish(serialize($msg), $routingKey, $properties);
+            $this->getContainer()->get('old_sound_rabbit_mq.my_task_producer')->publish(json_encode($msg), $routingKey, $properties);
         }
     }
 

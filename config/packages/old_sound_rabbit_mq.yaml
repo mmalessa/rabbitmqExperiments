@@ -57,23 +57,12 @@ old_sound_rabbit_mq:
     producers:
         # use 'old_sound_rabbit_mq.my_task_producer' service to send data.
         my_task:
-            connection:       ssl_connection
+            connection:       default
             exchange_options: { name: 'main_events', type: topic }
 
     consumers:
-        single_task:
-            connection:       ssl_connection
-            exchange_options: { name: 'main_events', type: topic}
-            queue_options:
-                name: 'task_job_done'
-                durable: true
-                auto_delete: false
-                routing_keys:
-                    - 'test.task_job_done'
-            callback:         App\Consumer\SingleTaskConsumer
-
         all_logs:
-            connection:       ssl_connection
+            connection:       default
             exchange_options: { name: 'main_events', type: topic }
             qos_options:     { prefetch_size: 0, prefetch_count: 1, global: false }
             queue_options:
@@ -81,26 +70,15 @@ old_sound_rabbit_mq:
                 durable: true
                 auto_delete: false
                 arguments:
-                    x-dead-letter-exchange: ['S', 'main_events_dead']
+                    x-dead-letter-exchange: ['S', 'main_events']
+#                    x-dead-letter-exchange: ['S', 'main_events_dead']
                     x-dead-letter-routing-key: ['S', 'test.task_job_done']
+#                    x-dead-letter-routing-key: ['S', 'test.task_job_done.rejected']
                     x-max-priority: ['I', 3]
                 routing_keys:
                     - '#'
             callback:         App\Consumer\AllLogsConsumer
 
-        all_logs_dead:
-            connection:       ssl_connection
-            exchange_options: { name: 'main_events_dead', type: topic}
-            queue_options:
-                name: 'all_logs_dead'
-                durable: true
-                auto_delete: false
-                routing_keys:
-                    - '#'
-#            graceful_max_execution:
-#                timeout: 600  # seconds
-#                exit_code: 10 # default is 0
-            callback:         App\Consumer\AllLogsConsumer
 
 # QUEUE ARGUMENTS
 #
@@ -152,3 +130,16 @@ old_sound_rabbit_mq:
 # when waiting for new tasks.
 # The graceful_max_execution.exit_code specifies what exit code should be returned by the consumer
 # when the graceful max execution timeout occurs. Without specifying it, the consumer will exit with status 0.
+
+# TOPIC EXCHANGE
+# Messages sent to a topic exchange can't have an arbitrary routing_key - it must be a list of words, delimited by dots.
+# The words can be anything, but usually they specify some features connected to the message.
+# A few valid routing key examples: "stock.usd.nyse", "nyse.vmw", "quick.orange.rabbit".
+# There can be as many words in the routing key as you like, up to the limit of 255 bytes.
+
+# The binding key must also be in the same form.
+# The logic behind the topic exchange is similar to a direct one - a message sent with a particular routing key
+# will be delivered to all the queues that are bound with a matching binding key.
+# However there are two important special cases for binding keys:
+#    * (star) can substitute for exactly one word.
+#    # (hash) can substitute for zero or more words.
