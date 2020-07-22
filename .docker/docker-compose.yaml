@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+
+    rexp-application:
+        image: rexp-application:latest
+        container_name: rexp-application
+        build:
+            context: base/application
+        restart: always
+        volumes:
+            - ../:/application
+            - ./config/application/.bashrc:/home/developer/.bashrc
+            - ./config/application/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+        command: ['tail', '-f', '/dev/null']
+
+    rexp-rabbitmq:
+        image: rexp-rabbitmq:latest
+        container_name: rexp-rabbitmq
+        build:
+            context: base/rabbitmq
+        restart: always
+        ports: [15672:15672]
+        volumes:
+            - rexp_rabbitmq:/var/lib/rabbitmq
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+            RABBITMQ_NODENAME: ${RABBITMQ_NODENAME}
+
+volumes:
+    rexp_rabbitmq:
