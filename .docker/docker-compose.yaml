@@ -12,6 +12,10 @@ services:
             - ./config/application/.bashrc:/home/developer/.bashrc
             - ./config/application/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
         command: ['tail', '-f', '/dev/null']
+        networks:
+            rexp:
+                aliases:
+                    - application
 
     rexp-rabbitmq:
         image: rexp-rabbitmq:latest
@@ -26,6 +30,12 @@ services:
             RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
             RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
             RABBITMQ_NODENAME: ${RABBITMQ_NODENAME}
+        networks:
+            rexp:
+                aliases:
+                    - rabbitmq
 
+networks:
+    rexp:
 volumes:
     rexp_rabbitmq:
